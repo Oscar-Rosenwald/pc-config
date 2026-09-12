@@ -44,7 +44,7 @@
 
   i18n.defaultLocale = "en_GB.UTF-8";
   i18n.extraLocaleSettings = {
-	LC_ADDRESS = "en_GB.UTF-8";
+    LC_ADDRESS = "en_GB.UTF-8";
     LC_IDENTIFICATION = "en_GB.UTF-8";
     LC_MEASUREMENT = "en_GB.UTF-8";
     LC_MONETARY = "en_GB.UTF-8";
@@ -57,11 +57,6 @@
 
 
   nixpkgs.config.allowUnfree = true;  
-
-  # Copy the NixOS configuration file and link it from the resulting system
-  # (/run/current-system/configuration.nix). This is useful in case you
-  # accidentally delete configuration.nix.
-  system.copySystemConfiguration = true;
 
   # This option defines the first version of NixOS you have installed on this particular machine,
   # and is used to maintain compatibility with application data (e.g. databases) created on older NixOS versions.
@@ -80,8 +75,5 @@
   # and migrated your data accordingly.
   #
   # For more information, see `man configuration.nix` or https://nixos.org/manual/nixos/stable/options#opt-system.stateVersion .
-
-  # TODO: This is where system.stateVersion goes. That isn't safe to just change
-  # on my own, so let the OS generate it, then fill it in here, then remove the
-  # OS's file and link this one from there. Or something.
+  system.stateVersion = "26.05"; # Did you read the comment?
 }

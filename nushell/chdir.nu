@@ -35,8 +35,8 @@ export def path_completion [parent: path, pathSoFar: path] {
   ls $dir -s
   | where {|x|
     $x.name
-    | str lowercase
-    | str starts-with ($next | str lowercase)
+    | str downcase
+    | str starts-with ($next | str downcase)
   }
   | update name { |x|
     $dirSoFar | path join ($x.name + if $x.type == dir {'/'} else {''}) | escape_path

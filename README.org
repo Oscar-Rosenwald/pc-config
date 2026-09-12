@@ -1,3 +1,12 @@
 This is a repository of all my computer configurations, implemented for and by Nix.
 
 You will not find tools here, only configuration files.
+* TODOs
+** Sudoers
+   using ~security.sudo~
+** Sway config
+   Migrate from the i3 config files, i3 status bar, dunst, etc.
+** Create the =default= and =work= ssh keys
+   Ideally do this in home manager automatically unless the files already exist.
+** Clone this repo
+** Rename the VM hostname to =qemu=

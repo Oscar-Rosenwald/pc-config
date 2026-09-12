@@ -1,8 +1,13 @@
-{ config, pkgs, ... }: # other options are: lib, options, and inputs
+{
+  config,
+  specialArgs,
+  pkgs,
+  ... # other options are: lib, inputs, and options
+}: 
 
 {
   imports = [
-    /etc/nixos/hardware-configuration.nix
+    specialArgs.hardwareConfiguration
     ./immutable-config.nix # Stuff which changes very rarely
     ./users.nix # User configuration
     ./wayland.nix
@@ -39,12 +44,10 @@
     unzip
     dnsutils
     file
+    which
     tree
-    whereis
     nix-output-monitor # "nom" is like "nix" but better output
     glow # markdown highlighting in terminal
     lsof
   ];
-
-  # TODO This is hella unfinished.
 }

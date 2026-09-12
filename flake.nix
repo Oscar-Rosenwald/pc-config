@@ -1,0 +1,61 @@
+{
+  description = "Config files. That's it. Fuck you.";
+
+  inputs = { };
+
+  outputs = { ... }@inputs: {
+	nixosModules = {
+	  # Holds paths to files which the caller (home-manager config) needs. This
+	  # should guarantee that the files exist.
+	  files = {
+		# These are used in the nushell config text, so we must ensure they
+		# exist.
+		nushell = {
+		  aliases = ./nushell/aliases.nu;
+		  chdir = ./nushell/chdir.nu;
+		  completions = ./nushell/completions.nu;
+		  docker = ./nushell/docker.nu;
+		  external = ./nushell/external.nu;
+		  git = ./nushell/git.nu;
+		  grep = ./nushell/grep.nu;
+		  jj = ./nushell/jj.nu;
+		  kubectl = ./nushell/kubectl.nu;
+		  loadEnv = ./nushell/load_env.nu;
+		  misc = ./nushell/misc.nu;
+		  notes = ./nushell/notes.org;
+		  resiliency = ./nushell/resiliency.nu;
+		  screens = ./nushell/screens.nu;
+		  ssh = ./nushell/ssh.nu;
+		  testsMod = ./nushell/tests_mod.nu;
+		  updatePath = ./nushell/update_path.nu;
+		  vms = ./nushell/vms.nu ;
+		};
+
+		nix = {
+		  qemuHardwareConfiguration = ./nix/qemu-hardware-configuration.nix;
+		};
+
+		jujutsu = ./jj;
+		vim = ./vim;
+		dunst = ./dunst;
+		terminator = ./terminator;
+	  };
+
+	  # Holds random values which the caller (home-manager config) needs. These
+	  # values are derived somehow from the files in the 'files' set above, so
+	  # they must be defined here as well.
+	  values = {
+		ssh =
+		  let
+			sshDir = "~/.ssh";
+		  in {
+			# The identity file used by default and for private github.
+			defaultIdentity = "${sshDir}/default";
+
+			# The identity file used at work for contacting Motorola's GitHub.
+			workIdentity = "${sshDir}/work";
+		  };
+	  };
+	};
+  };
+}
