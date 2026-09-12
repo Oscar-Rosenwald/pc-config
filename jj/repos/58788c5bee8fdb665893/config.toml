@@ -1,0 +1,6 @@
+#:schema https://docs.jj-vcs.dev/latest/config-schema.json
+
+[revset-aliases]
+
+[snapshot]
+max-new-file-size = 12741024

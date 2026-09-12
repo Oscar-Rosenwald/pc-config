@@ -1,0 +1,49 @@
+[global_config]
+  focus = mouse
+  inactive_color_offset = 0.94824016563147
+  suppress_multiple_term_dialog = True
+  always_split_with_profile = True
+  title_use_system_font = False
+  title_font = Sans 15
+[keybindings]
+  copy = <Alt>w
+  paste = <Primary>y
+  hide_window = ""
+  edit_tab_title = ""
+  layout_launcher = ""
+  # These two had to be added to remove the Terminator-specific and OS-wide
+  # Ctrl+Alt+a shortcut which displays all terminator sessions ever. But later
+  # Terminator is complaining about a "duplicate keyword name due to these, so I
+  # commented them out again. Nobody knows what's going on...
+  # 
+  # hide_window = None
+  # rename_tab = None
+[profiles]
+  [[default]]
+    background_color = "#26003b"
+    cursor_color = "#aaaaaa"
+    font = Monospace 15
+    foreground_color = "#deddda"
+    show_titlebar = False
+    scrollback_lines = 50000
+  [[Mine]]
+    background_color = "#1a1a1a"
+    cursor_blink = False
+    cursor_color = "#aaaaaa"
+    foreground_color = "#ffbe6f"
+    show_titlebar = False
+    scrollback_lines = 10000
+    disable_mousewheel_zoom = True
+    word_chars = "-,./?%&#:_@"
+    use_custom_command = True
+    custom_command = /snap/bin/nu
+    copy_on_selection = True
+[layouts]
+  [[default]]
+    [[[window0]]]
+      type = Window
+      parent = ""
+    [[[child1]]]
+      type = Terminal
+      parent = window0
+[plugins]

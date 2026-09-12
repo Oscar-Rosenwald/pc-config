@@ -1,0 +1,10 @@
+build --remote_cache=http://localhost:46190
+build --local_resources="cpu=HOST_CPUS-4"
+build --local_resources="memory=HOST_RAM*0.5"
+# build --local_resources="memory=HOST_RAM*0.25"
+
+# This was at various points recommended and discouraged, so I don't know what to do:
+common --jobs=4
+
+# Prevent the Bazel Server from ballooning in RAM
+startup --host_jvm_args="-Xmx4g"

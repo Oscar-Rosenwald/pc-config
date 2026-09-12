@@ -1,0 +1,20 @@
+#:schema https://docs.jj-vcs.dev/latest/config-schema.json
+
+[user]
+name = "Tomithy the One True Tom"
+email = "cyril.saroch@ava.uk"
+
+[ui]
+default-command = ["log", "-n", "10"]
+editor = "emacsclient --create-frame"
+merge-editor = ":builtin"
+pager = "bat"
+
+[revsets]
+log = "..@"
+
+[aliases]
+la = ["log", "-r", "all()"]
+
+[revset-aliases]
+"immutable_heads()" = 'builtin_immutable_heads() | bookmarks(regex:"^release_.*")'

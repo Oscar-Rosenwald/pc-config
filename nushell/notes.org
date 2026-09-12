@@ -1,0 +1,14 @@
+Parsing psql directly into nushell tables:
+
+#+begin_src nushell-ts
+  ssh admin@10.132.60.19 "shell -c 'docker compose exec db psql -U postgres -P pager=off -d vaionmgmt -c "'"select * from users"'"'" | 
+  lines |
+  reject 1 |
+  drop 2 |
+  str replace (char cr) (char nl) |
+  str join (char nl) |
+  str trim |
+  from csv --separator '|' --noheaders |
+  update cells { str trim } |
+  headers
+#+end_src
