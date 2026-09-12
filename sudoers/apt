@@ -1,0 +1,1 @@
+ALL ALL=(ALL) NOPASSWD: /usr/bin/apt install *, /usr/bin/apt update, /usr/bin/apt update *, /usr/bin/apt upgrade, /usr/bin/apt upgrade *, /usr/bin/apt autoremove, /usr/bin/apt autoremove *
