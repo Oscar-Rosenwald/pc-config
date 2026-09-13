@@ -47,7 +47,7 @@
         home-manager.users.william = import ./home.nix;
       };
     in {
-      nixosConfigurations."nixos" = nixpkgs.lib.nixosSystem {
+      nixosConfigurations."william-on-the-net" = nixpkgs.lib.nixosSystem {
         specialArgs = specialArgs // {
           hardwareConfiguration = configFiles.nix.qemuHardwareConfiguration;
         };
