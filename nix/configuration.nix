@@ -1,3 +1,13 @@
+# This config file is called by a util function which passes to it all the
+# arguments. The util function is called by the nixos configuration flake,
+# which calls the util function repeatedly, once for every hostname defined
+# in the config flake (i.e., my config repository) under the hardware
+# attribute.
+#
+# - specialArgs:
+#     - hardwareConfigurationFile: path to the hardware configuration file
+#       Dependent on the host we're using.
+
 {
   config,
   specialArgs,
@@ -7,10 +17,10 @@
 
 {
   imports = [
-    specialArgs.hardwareConfiguration
+    specialArgs.hardwareConfigurationFile
     ./immutable-config.nix # Stuff which changes very rarely
     ./users.nix # User configuration
-    ./wayland.nix
+    ./wayland.nix # Display manager and window manger configs
   ];
 
   # Which packages to install system-wide

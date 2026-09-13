@@ -1,4 +1,15 @@
 # This file describes the home-manager configuration.
+# It is called by a util function which passes to it all the
+# arguments. The util function is called by the nixos configuration flake,
+# which calls the util function repeatedly, once for every hostname defined
+# in the config flake (i.e., my config repository) under the hardware
+# attribute.
+#
+# - specialArgs:
+#     - configFiles: Files which are guaranteed to exist in the config repo.
+#     - configValues: Values defined by the config repo.
+#
+# - pkgs: The result of [import nixpkgs {...}]
 
 {
   specialArgs,

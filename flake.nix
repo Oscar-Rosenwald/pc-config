@@ -31,10 +31,6 @@
 		  vms = ./nushell/vms.nu ;
 		};
 
-		nix = {
-		  qemuHardwareConfiguration = ./nix/qemu-hardware-configuration.nix;
-		};
-
 		jujutsu = ./jj;
 		vim = ./vim;
 		dunst = ./dunst;
@@ -52,10 +48,22 @@
 			# The identity file used by default and for private github.
 			defaultIdentity = "${sshDir}/default";
 
-			# The identity file used at work for contacting Motorola's GitHub.
+			# The identity file used at work for contacting Motorola's GitHub or
+			# GitLab.
 			workIdentity = "${sshDir}/work";
 		  };
 	  };
+
+	  # Contains information local to specific hosts, i.e., specific machines.
+	  hardware = {
+		# The qemu virtual machine.
+		qemuVm = {
+		  hostname = "qemu-william";
+		  hardwareConfiguration = ./nix/qemu-hardware-configuration.nix;
+		};
+	  };
+
+	  utils = import ./nix/utils.nix;
 	};
   };
 }

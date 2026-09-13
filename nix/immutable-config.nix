@@ -5,15 +5,21 @@
 # =====================================================
 
 {
+  specialArgs,
+  ...
+}:
+
+{
   # Enable flakes: run `sudo nix-rebuild switch` with this, then you'll be using
   # flakes
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
-  # Enable gnome-keyring secret vault.
+  # Enable gnome-keyring secret vault. The password is like that on your home
+  # laptop (e.i., child to shit).
   services.gnome.gnome-keyring.enable = true;
 
   # A fine-control privilege controller (needed to configure sway with
-  # home-manager).
+  # home-manager apparently).
   security.polkit.enable = true;
 
   # Sound config
@@ -25,10 +31,11 @@
     pulse.enable = true;
   };
 
+  # Enable the SSH server.
   services.openssh.enable = true;
   services.qemuGuest.enable = true;
 
-  networking.hostName = "william-on-the-net";
+  networking.hostName = specialArgs.hostname;
   networking.networkmanager.enable = true;
 
   # Use the GRUB 2 boot loader.
@@ -55,7 +62,7 @@
     LC_TIME = "en_GB.UTF-8";
   };
 
-
+  # Allow using packages which aren't open source.
   nixpkgs.config.allowUnfree = true;  
 
   # This option defines the first version of NixOS you have installed on this particular machine,
