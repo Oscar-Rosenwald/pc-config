@@ -10,3 +10,8 @@ You will not find tools here, only configuration files.
    Ideally do this in home manager automatically unless the files already exist.
 ** Clone this repo
 ** Rename the VM hostname to =qemu=
+   Need to split the config up so the hostname in configuration.nix isn't the same on
+   all installations. I don't yet know how to set the computer's hostname predictably
+   during installation.
+** Migrate Emacs
+   Jesus Fucking Christ, that'll be a nightmare.

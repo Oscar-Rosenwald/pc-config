@@ -1,0 +1,3 @@
+This directory contains custom files which normal Linux distributions put in =/etc/sudoers.d/=.
+
+Nix is not a normal distribution - it'll do it through the config. These files are persisted here for reference.
