@@ -7,6 +7,12 @@ hardware configuration file there first.
 ** TODO Sudoers
    using ~security.sudo~ (look it up).
 ** TODO Sway config
+** TODO Defaultapps
+   =defaultapps= is a directory containing the necessary files/tools for
+   configuring the default browser. Vivaldi cannot open Jira etc, so we need to
+   work around it.
+
+   Those files are a reference. Don't link them anywhere.
    Migrate from the i3 config files, i3 status bar, dunst, etc.
 ** TODO Create the =default= and =work= ssh keys
    Ideally do this in home manager automatically unless the files already exist.
