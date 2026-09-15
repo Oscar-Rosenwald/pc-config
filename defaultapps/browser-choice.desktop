@@ -1,0 +1,21 @@
+[Desktop Entry]
+Version=1.0
+Name=Custom Web
+GenericName=Web Browser
+Exec=/home/ncx843@ds.mot.com/pc-config/nushell/target-browser-opener.nu %u
+Terminal=false
+NoDisplay=true
+Type=Application
+MimeType=text/html;text/xml;application/xhtml+xml;application/vnd.mozilla.xul+xml;text/mml;x-scheme-handler/http;x-scheme-handler/https;
+StartupNotify=true
+Categories=Network;WebBrowser;
+Keywords=web;browser;internet;
+Actions=new-window;new-private-window;
+
+[Desktop Action new-window]
+Name=New Window
+Exec=/home/ncx843@ds.mot.com/pc-config/nushell/target-browser-opener.nu %u --new-window
+
+[Desktop Action new-private-window]
+Name=Private Window
+Exec=/home/ncx843@ds.mot.com/pc-config/nushell/target-browser-opener.nu %u --incognito
