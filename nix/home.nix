@@ -37,11 +37,11 @@ in {
     enable = true;
 
     configFile.text =
-	  let
-		files = configFiles.nushell;
-	  in ''
-		source ${files.loadEnv}
-		source ${files.updatePath}
+      let
+        files = configFiles.nushell;
+      in ''
+        source ${files.loadEnv}
+        source ${files.updatePath}
 
         source ${files.misc}
         source ${files.chdir}
@@ -98,13 +98,23 @@ in {
       "mv" = "mv -i";
       "beep" = "paplay -n synth 0.2 sine 1000 vol 0.2";
       "fireb" = "firefox -p blabla 2>/dev/null &";
+      "phones" = "bluetooth connect 2C:27:9E:71:45:69";
     };
   };
 
   programs.jujutsu.enable = true;
-  home.file.".config/jj/" = {
+  home.file.".config/jj/config.toml" = {
     enable = true;
     source = configFiles.jujutsu;
+  };
+
+  programs.vim = {
+    enable = true;
+    settings = {
+      tabstop = 4;
+      shiftwidth = 4;
+      expandtab = true;
+    };
   };
 
   home.file.".vim" = {

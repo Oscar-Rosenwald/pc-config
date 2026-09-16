@@ -1,0 +1,17 @@
+#    -*- mode: org -*-
+
+
+Archived entries from file /home/laryan/pc-config/README.org
+
+
+* DONE Rename the VM hostname to =qemu=
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2026-09-20 Sun 16:07
+  :ARCHIVE_FILE: ~/pc-config/README.org
+  :ARCHIVE_OLPATH: TODOs
+  :ARCHIVE_CATEGORY: README
+  :ARCHIVE_TODO: DONE
+  :END:
+  Need to split the config up so the hostname in configuration.nix isn't the same on
+  all installations. I don't yet know how to set the computer's hostname predictably
+  during installation.

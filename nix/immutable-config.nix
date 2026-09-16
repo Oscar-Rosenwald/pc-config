@@ -35,12 +35,12 @@
   services.openssh.enable = true;
   services.qemuGuest.enable = true;
 
-  networking.hostName = specialArgs.hostname;
+  networking.hostName = specialArgs.setHostnameTo;
   networking.networkmanager.enable = true;
 
   # Use the GRUB 2 boot loader.
   boot.loader.grub.enable = true;
-  boot.loader.grub.device = "/dev/sda";
+  boot.loader.grub.device = specialArgs.bootloaderDevice;
   boot.loader.grub.useOSProber = true;
   # Limit the number of generations to keep
   boot.loader.systemd-boot.configurationLimit = 10;

@@ -29,7 +29,13 @@
       configurationFile,
     }: _hardwareName: hardwareConfig:
 	let
+	  bootloaderDevice = hardwareConfig.bootloaderDevice;
 	  hostname = hardwareConfig.hostname;
+	  setHostnameTo =
+	    if hardwareConfig ? hostnameOverride then
+	      hardwareConfig.hostnameOverride
+	    else
+	      hostname;
 	  hardwareConfigurationFile = hardwareConfig.hardwareConfiguration;
 	  homeManagerConfig = {
 		home-manager.useGlobalPkgs = true;
@@ -45,7 +51,9 @@
 	  ${hostname} = nixpkgs.lib.nixosSystem {
 		specialArgs = specialArgs // {
 		  inherit hostname;
+		  inherit setHostnameTo;
 		  inherit hardwareConfigurationFile;
+		  inherit bootloaderDevice;
 		};
 			  
 		modules = [

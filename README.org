@@ -2,16 +2,26 @@ This is a repository of all my computer configurations, implemented for and by N
 
 You will not find tools here, only configuration files.
 * TODOs
-** Sudoers
-   using ~security.sudo~
-** Sway config
+** TODO Sudoers
+   using ~security.sudo~ (look it up).
+** TODO Sway config
    Migrate from the i3 config files, i3 status bar, dunst, etc.
-** Create the =default= and =work= ssh keys
+** TODO Create the =default= and =work= ssh keys
    Ideally do this in home manager automatically unless the files already exist.
-** Clone this repo
-** Rename the VM hostname to =qemu=
-   Need to split the config up so the hostname in configuration.nix isn't the same on
-   all installations. I don't yet know how to set the computer's hostname predictably
-   during installation.
-** Migrate Emacs
+** TODO Clone this repo
+** TODO Migrate Emacs
    Jesus Fucking Christ, that'll be a nightmare.
+** TODO Transcribe jujustu home-manager
+   TOML is a supported nix format. You can do anything the native way.
+** TEST Don't use =nixosModules=
+   It turns out this repository defines =files=, =values=, =utils= etc. in a
+   =nixosModules= output, but you can just have them be top-level attributes of
+   the output. There's nothing special about =nixosModules=, and these things
+   aren't really modules, are they? Some are just constants, others are more
+   like a =lib=.
+** TEST ~programs.bash.profileExtra~
+   There's a TODO comment. Do we need to do these even on nix? Must test.
+* COMMENT File config
+#+TODO: TODO TEST DONE
+# Local variables:
+# End:
