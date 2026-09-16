@@ -3,7 +3,7 @@
 
   inputs = {
 	nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
-	myConfigDir.url = "github:Oscar-Rosenwald/pc-config/master";
+	myConfigDir.url = "github:Oscar-Rosenwald/pc-config/test";
 	home-manager = {
 	  url = "github:nix-community/home-manager/release-26.05";
 	  inputs.nixpkgs.follows = "nixpkgs";
@@ -27,8 +27,8 @@
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs: 
 	let
-	  system			= "x86_64-linux";
-	  pkgs				= import nixpkgs { inherit system; config.allowUnfree = true; };
+	  system		= "x86_64-linux";
+	  pkgs			= import nixpkgs { inherit system; config.allowUnfree = true; };
 	  customConfig		= inputs.myConfigDir.nixosModules;
 	  configFiles		= customConfig.files;
 	  configValues		= customConfig.values;

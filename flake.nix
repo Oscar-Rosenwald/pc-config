@@ -60,6 +60,20 @@
 		qemuVm = {
 		  hostname = "qemu-william";
 		  hardwareConfiguration = ./nix/qemu-hardware-configuration.nix;
+		  bootloaderDevice = "/dev/sda";
+		};
+
+		workQemuVm = {
+		  hostname = "work-qemu-william";
+		  hardwareConfiguration = ./nix/work-qemu-hardware-configuration.nix;
+		  bootloaderDevice = "/dev/vda1";
+		};
+
+		tempWilliam = {
+		  hostname = "mountain-lightning-on-the-net";
+		  hostnameOverride = "work-qemu-william";
+		  hardwareConfiguration = inputs.self.nixosModules.hardware.workQemuVm.hardwareConfiguration;
+		  bootloaderDevice = inputs.self.nixosModules.hardware.workQemuVm.bootloaderDevice;
 		};
 	  };
 
