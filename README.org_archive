@@ -15,3 +15,26 @@ Archived entries from file /home/laryan/pc-config/README.org
   Need to split the config up so the hostname in configuration.nix isn't the same on
   all installations. I don't yet know how to set the computer's hostname predictably
   during installation.
+
+* DONE Don't use =nixosModules=
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2026-09-20 Sun 19:59
+  :ARCHIVE_FILE: ~/pc-config/README.org
+  :ARCHIVE_OLPATH: TODOs
+  :ARCHIVE_CATEGORY: README
+  :ARCHIVE_TODO: DONE
+  :END:
+  It turns out this repository defines =files=, =values=, =utils= etc. in a
+  =nixosModules= output, but you can just have them be top-level attributes of
+  the output. There's nothing special about =nixosModules=, and these things
+  aren't really modules, are they? Some are just constants, others are more
+  like a =lib=.
+
+* DONE Clone this repo
+  :PROPERTIES:
+  :ARCHIVE_TIME: 2026-09-20 Sun 19:59
+  :ARCHIVE_FILE: ~/pc-config/README.org
+  :ARCHIVE_OLPATH: TODOs
+  :ARCHIVE_CATEGORY: README
+  :ARCHIVE_TODO: DONE
+  :END:

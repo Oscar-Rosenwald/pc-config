@@ -1,6 +1,8 @@
 This is a repository of all my computer configurations, implemented for and by Nix.
 
-You will not find tools here, only configuration files.
+To make it work, create a symlink =/etc/nixos= to =nix/= in a local copy of this
+repository, e.g. =/home/user/config/nix=. Don't forget to move the original
+hardware configuration file there first.
 * TODOs
 ** TODO Sudoers
    using ~security.sudo~ (look it up).
@@ -8,17 +10,10 @@ You will not find tools here, only configuration files.
    Migrate from the i3 config files, i3 status bar, dunst, etc.
 ** TODO Create the =default= and =work= ssh keys
    Ideally do this in home manager automatically unless the files already exist.
-** TODO Clone this repo
 ** TODO Migrate Emacs
    Jesus Fucking Christ, that'll be a nightmare.
 ** TODO Transcribe jujustu home-manager
    TOML is a supported nix format. You can do anything the native way.
-** TEST Don't use =nixosModules=
-   It turns out this repository defines =files=, =values=, =utils= etc. in a
-   =nixosModules= output, but you can just have them be top-level attributes of
-   the output. There's nothing special about =nixosModules=, and these things
-   aren't really modules, are they? Some are just constants, others are more
-   like a =lib=.
 ** TEST ~programs.bash.profileExtra~
    There's a TODO comment. Do we need to do these even on nix? Must test.
 * COMMENT File config
