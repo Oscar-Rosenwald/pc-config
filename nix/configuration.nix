@@ -62,5 +62,7 @@
     emacs
     gnutls
 	gcc
+	rust-analyzer
+	gopls
   ];
 }

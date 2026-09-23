@@ -4,7 +4,10 @@
   "Created 2025-11-12.")
 
 (custom-theme-set-faces
+ ;; Theme name
  'my-pastels
+
+ ;; Arguments
  '(cursor ((t (:background "yellow"))))
  '(fixed-pitch ((t (:family "Monospace"))))
  '(variable-pitch ((((type w32)) (:foundry "outline" :family "Arial")) (t (:family "Sans Serif"))))
@@ -77,7 +80,10 @@
  '(line-number ((t (:inherit (shadow default) :foreground "light blue"))))
  '(line-number-current-line ((t (:inherit line-number :foreground "red"))))
  '(linum ((t (:inherit (line-number) :foreground "orange"))))
+ '(highlight-indent-guides-top-character-face ((t (:inherit default :foreground "red"))))
+ '(highlight-indent-guides-stack-character-face ((t (:inherit highlight-indent-guides-top-character-face :foreground "#cde21d"))))
+ '(highlight-indent-guides-character-face ((t (:inherit highlight-indent-guides-top-character-face :foreground "gray"))))
  '(default ((t (:inherit nil :extend nil :stipple nil :background "#303030" :foreground "white" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight regular :height 98 :width normal :foundry "PfEd" :family "DejaVu Sans Mono")))))
 
-;;; To reload - Evaluate the above and call `load-theme RET my-pastels RET`
+;;; To reload - Evaluate the above, save, and call `load-theme RET my-pastels RET`
 (provide-theme 'my-pastels)
