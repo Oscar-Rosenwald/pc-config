@@ -6,6 +6,25 @@ def "control path" [host: string] {
   return $"ControlPath /tmp/($host)"
 }
 
+# Returns the path to where the last_used_CC_IP is stored - used by 'get_last_used_CC_IP'.
+def "last_used_CC_path" [] { return /tmp/ssh-background-last-CC }
+
+# Returns the last setup/used IP for any of the custom SSH CC commands.
+def "get_last_used_CC_IP" [] {
+  let pathToCcIp = last_used_CC_path
+
+  if not ($pathToCcIp | path exists) {
+	error make $"No CC IP stored in ($pathToCcIp). Specify IP manually. Lazy bastard."
+  }
+
+  return (open $pathToCcIp | lines | first)
+}
+
+# Stores [ip] in the file returned by 'last_used_CC_path'.
+def "update_last_used_CC_IP" [ip: string] {
+  $ip | save --force (last_used_CC_path)
+}
+
 # Opens an SSH session in the background and allows other SSH sessions on the
 # same host to re-use its authentication so you don't need to type in the
 # password all the time.
@@ -14,43 +33,55 @@ def "control path" [host: string] {
 # session.
 export def "ssh background" [
   host: string,         # IP or address of the target host.
-  --user(-u): string,   # User on the host. Defaults to "admin".
+  --user(-u) = "admin", # User on the host.
 ] {
-  let user = $user | default "admin"
+  let user = $user
   echoc $"--> ssh ($user)@($host) -fMN -o '(control path $host)'"
 
   (
     ^ssh $"($user)@($host)"     # Open SSH session
     -f                          # Put the session to the background
     -M                          # Open in master mode - other SSH session will use this connections and auth
-	-N                          # Allows us not to run any command in master mode
+	-N                          # Allows us not to run any command in master mode, only open the master session
     -o $"(control path $host)"  # Set where this session will be available to other sessions
   )
+
+  update_last_used_CC_IP $host
 }
 
 # Reuse the SSH session opened in the background by calling "ssh background".
 export def --wrapped "ssh use" [
-  host: string,         # IP or address of the target host.
-  --user(-u): string,   # User on the host. Defaults to "admin".
-  ...rest,              # Command to run
+  --host(-h): string,         # IP or address of the target host. Defaults to the last used one.
+  --user(-u) = "admin", # User on the host.
+  --help,
+  ...rest,              # Command to run + its arguments
 ] {
-  let controlPath = control path $host
-  let user = $user | default "admin"
+  let host = if ($host == null) { get_last_used_CC_IP } else { $host }
 
-  echoc $"--> ssh ($user)@($host) -o '($controlPath)' -n ($rest | str join ' ')"
+  let controlPath = control path $host
+  let user = $user
+  let logFile = "/tmp/ssh-use-log"
+
+  echoc $"--> ssh ($user)@($host) -o '($controlPath)' -t ($rest | str join ' ') e> ($logFile)"
 
   (
     ^ssh $"($user)@($host)"         # Open SSH session
       -o $"($controlPath)"          # Where this session has been made available by "ssh background"
-      -n                            # Don't accept any stdin input on this session
+      -t                            # Pass stdin to the remote
       ...$rest                      # Command to run on the session
-  )
+  ) e> $logFile
+
+  if (get_last_used_CC_IP) != $host {
+	update_last_used_CC_IP $host
+  }
 }
 
 # Stop the SSH session created by "ssh background".
 export def "ssh stop" [
-  host: string, # IP or address of the target host.
+  host?: string, # IP or address of the target host. Defaults to the last used one.
 ] {
+  let host = if ($host == null) { get_last_used_CC_IP } else { $host }
+
   (
     ^ssh $host
     -O stop                     # Send the 'stop' command to the SSH session
