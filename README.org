@@ -16,13 +16,13 @@ hardware configuration file there first.
    Migrate from the i3 config files, i3 status bar, dunst, etc.
 ** TODO Create the =default= and =work= ssh keys
    Ideally do this in home manager automatically unless the files already exist.
-** TODO Migrate Emacs
-   Jesus Fucking Christ, that'll be a nightmare.
 ** TODO Transcribe jujustu home-manager
    TOML is a supported nix format. You can do anything the native way.
 ** TODO Cleanup
    There are plenty of files in there that don't need to be here because nix
    doesn't use them. Remove them. Example: =jj/repos/= isn't used anymore.
+** TEST Migrate Emacs
+   Jesus Fucking Christ, that'll be a nightmare.
 ** TEST ~programs.bash.profileExtra~
    There's a TODO comment. Do we need to do these even on nix? Must test.
 * COMMENT File config
