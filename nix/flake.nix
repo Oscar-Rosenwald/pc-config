@@ -101,13 +101,15 @@
 		  hostname = "qemu-william";
 		  hardwareConfiguration = ./qemu-hardware-configuration.nix;
 		  bootloaderDevice = "/dev/sda";
+		  supportEfi = false;
 		};
 
 		# The qemu virtual machine on the work laptop.
 		workQemuVm = {
 		  hostname = "work-qemu-william";
 		  hardwareConfiguration = ./work-qemu-hardware-configuration.nix;
-		  bootloaderDevice = "/dev/vda1";
+		  bootloaderDevice = "nodev";
+		  supportEfi = true;
 		};
 
 		# Any machine whose hostname we wish to change. Need to build-switch nixos

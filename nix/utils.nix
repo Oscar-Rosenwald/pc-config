@@ -31,6 +31,7 @@
 	let
 	  bootloaderDevice = hardwareConfig.bootloaderDevice;
 	  hostname = hardwareConfig.hostname;
+	  supportEfi = hardwareConfig.supportEfi;
 	  setHostnameTo =
 	    if hardwareConfig ? hostnameOverride then
 	      hardwareConfig.hostnameOverride
@@ -54,6 +55,7 @@
 		  inherit setHostnameTo;
 		  inherit hardwareConfigurationFile;
 		  inherit bootloaderDevice;
+		  inherit supportEfi;
 		};
 			  
 		modules = [

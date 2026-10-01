@@ -41,7 +41,9 @@
   # Use the GRUB 2 boot loader.
   boot.loader.grub.enable = true;
   boot.loader.grub.device = specialArgs.bootloaderDevice;
-  boot.loader.grub.useOSProber = true;
+  boot.loader.efi.canTouchEfiVariables = specialArgs.supportEfi;
+  boot.loader.grub.useOSProber = specialArgs.supportEfi;
+  boot.loader.grub.efiSupport = specialArgs.supportEfi;
   # Limit the number of generations to keep
   boot.loader.systemd-boot.configurationLimit = 10;
 
