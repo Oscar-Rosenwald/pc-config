@@ -2,7 +2,7 @@
   description = "Configuration. That's it. Fuck you.";
 
   inputs = {
-	nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+	nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
 	home-manager = {
 	  url = "github:nix-community/home-manager/release-26.05";
 	  inputs.nixpkgs.follows = "nixpkgs";
@@ -116,7 +116,7 @@
 		# (the target hostname) to do this. No machine will (or can) use this
 		# config long-term.
 		hostRename = self.hardware.workQemuVm // {
-		  hostname = "mountain-lightning-on-the-net";
+		  hostname = "nixos";
 		  hostnameOverride = "work-qemu-william";
 		};
 	  };
