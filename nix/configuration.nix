@@ -59,5 +59,8 @@
     nix-output-monitor # "nom" is like "nix" but better output
     glow # markdown highlighting in terminal
     lsof
+    emacs
+    gnutls
+	gcc
   ];
 }

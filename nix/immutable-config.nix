@@ -45,7 +45,7 @@
   boot.loader.grub.useOSProber = specialArgs.supportEfi;
   boot.loader.grub.efiSupport = specialArgs.supportEfi;
   # Limit the number of generations to keep
-  boot.loader.systemd-boot.configurationLimit = 10;
+  boot.loader.systemd-boot.configurationLimit = 50;
 
   time.timeZone = "Europe/London";
   services.xserver.xkb.layout = "us";

@@ -117,9 +117,9 @@
 		# Feel free to change [hostname] (the current one) and [hostnameOverride]
 		# (the target hostname) to do this. No machine will (or can) use this
 		# config long-term.
-		hostRename = self.hardware.workQemuVm // {
+		hostRename = self.hardware.qemuVm // {
 		  hostname = "nixos";
-		  hostnameOverride = "work-qemu-william";
+		  hostnameOverride = "qemu-william";
 		};
 	  };
 

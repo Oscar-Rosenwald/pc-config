@@ -6,6 +6,8 @@
     (defconst documents-dir				"~/Documents/")
     (defconst generic-server-dir		"~/generic-cache-server/")
     (defconst cease-language-dir		"~/cease/")
+    (defconst PRIVATE-DIR (expand-file-name "~/Private/"))
+    (defconst documents-dir "~/Private/Documents/")
 
     (defvar evil-point-before nil)
     (defvar cw-pre-yank-point)
@@ -25,20 +27,13 @@
       "A directory-local variable which defines the tag that is to be used by
     `mine--org-roam-node-insert' and `mine--org-roam-node-find'.")
     (defvar skeleton-custom-alist '(("(" . ")")
-    								("{" . "}")
+    				("{" . "}")
+    				("<" . ">")
     								("[" . "]")
     								("\"" . "\""))
       "Alist of all skeleton pairs I use")
 
-    (defvar default-font-size
-      (cond ((and work-computer
-    			  (seq-contains-p command-line-args "home"))
-    		 home-font-size)
-    		(work-computer
-    		 work-font-size)
-    		((string= user-login-name "laryan")
-    		 inspiron-font-size)
-    		(t mac-font-size))
+    (defvar default-font-size 120
       "Size of text depending on the screen I use. Will change standard font size, minibuffer prompt, and mod line.")
 
     (defvar macro-details nil
@@ -802,7 +797,6 @@
         (delete-region POINT (point))))
 
     (defun backward-delete-last-char (ARG)
-
       "Delete ARG characters from the end of the previous word."
       (interactive "p")
       (backward-word-end)
@@ -1480,7 +1474,7 @@
     	  scroll-conservatively 10000
     	  mac-command-modifier 'meta
     	  mac-right-option-modifier 'control
-    	  custom-theme-directory "~/Private/emacs/custom-themes/"
+    	  custom-theme-directory "~/pc-config/emacs/themes/"
     	  highlight-indent-guides-responsive 'top
     	  highlight-indent-guides-method 'character)
 
@@ -1491,6 +1485,57 @@
     		(?{ "test region"           :var go-testing-region)
     		(?_ "copy line"             :var go-amend-line-while-debugging)
     		(?l "no log filter"         :var go-no-log-filters-please)))
+
+    (setq quick-open-file-alist-common
+    	  '(
+    		;; Directories
+    		(?p "private" :directory PRIVATE-DIR
+    			((?p "Private" "")
+    			 (?b "bugs"  "bugs.org")
+    			 (?c "cache" "cache/")
+    			 (?C "config" "configs/")
+    			 (?d "documents" :directory "Documents/"
+    				 ((?h "home" "home/")
+    				  (?w "work" "work/")))
+    			 (?D "desktop" :directory "Desktops/"
+    				 ((?h "home" "home/")
+    				  (?w "work" "work/")))
+    			 (?e "emacs" "emacs/")
+    			 (?o "org-roam" "org-roam/")
+    			 (?P "code" :directory "code/"
+    				 ((?P "code" "")
+    				  (?p "python" "python/")
+    				  (?e "elisp" "elisp/")
+    				  (?g "go" "go/")
+    				  (?n "nu" "nushell/")
+    				  (?r "rust" "rust/")))
+    			 (?s "shell" :directory "shell/"
+    				 ((?s "shell"    "")
+    				  (?c "common"   "common/")
+    				  (?i "i3"       "i3/")
+    				  (?h "home"     "home/")
+    				  (?e "external" "external/")
+    				  (?w "work"     "work/")
+    				  (?a "actions"  "work/actions/")
+    				  (?C "cookies"  "work/cookies/")
+    				  (?g "git"      "work/git/")
+    				  (?l "logging"  "work/logging/")
+    				  (?u "utils"    "work/utils/")))))
+
+    		(?d "Directories"
+    			((?h "home"         "~/")
+    			 (?g "generic-server" :var :file generic-server-dir)
+    			 (?c "cease"          :var :file cease-language-dir)
+    			 (?D "downloads"               "~/Downloads/")))
+
+    		;; Other files
+    		(?F "Files"
+    			((?B "bashRC"                          "~/.bashrc")
+    			 (?i "i3 config"                       "~/.config/i3/config")
+    			 (?f "settings"             :concat    PRIVATE-DIR "/emacs/settings.org")
+    			 (?e "emacs"                :concat    PRIVATE-DIR "emacs/.emacs")
+    			 (?c "completion"           :concat    quick-open-shell "common/completion.bash")
+    			 (?q "quick open settings"  :var       find-quick-files-src-block)))))
 
     (setq quick-open-file-alist-home
     	  (append
@@ -1598,57 +1643,6 @@
     		 )
     	   quick-open-file-alist-common))
 
-    (setq quick-open-file-alist-common
-    	  '(
-    		;; Directories
-    		(?p "private" :directory PRIVATE-DIR
-    			((?p "Private" "")
-    			 (?b "bugs"  "bugs.org")
-    			 (?c "cache" "cache/")
-    			 (?C "config" "configs/")
-    			 (?d "documents" :directory "Documents/"
-    				 ((?h "home" "home/")
-    				  (?w "work" "work/")))
-    			 (?D "desktop" :directory "Desktops/"
-    				 ((?h "home" "home/")
-    				  (?w "work" "work/")))
-    			 (?e "emacs" "emacs/")
-    			 (?o "org-roam" "org-roam/")
-    			 (?P "code" :directory "code/"
-    				 ((?P "code" "")
-    				  (?p "python" "python/")
-    				  (?e "elisp" "elisp/")
-    				  (?g "go" "go/")
-    				  (?n "nu" "nushell/")
-    				  (?r "rust" "rust/")))
-    			 (?s "shell" :directory "shell/"
-    				 ((?s "shell"    "")
-    				  (?c "common"   "common/")
-    				  (?i "i3"       "i3/")
-    				  (?h "home"     "home/")
-    				  (?e "external" "external/")
-    				  (?w "work"     "work/")
-    				  (?a "actions"  "work/actions/")
-    				  (?C "cookies"  "work/cookies/")
-    				  (?g "git"      "work/git/")
-    				  (?l "logging"  "work/logging/")
-    				  (?u "utils"    "work/utils/")))))
-
-    		(?d "Directories"
-    			((?h "home"         "~/")
-    			 (?g "generic-server" :var :file generic-server-dir)
-    			 (?c "cease"          :var :file cease-language-dir)
-    			 (?D "downloads"               "~/Downloads/")))
-
-    		;; Other files
-    		(?F "Files"
-    			((?B "bashRC"                          "~/.bashrc")
-    			 (?i "i3 config"                       "~/.config/i3/config")
-    			 (?f "settings"             :concat    PRIVATE-DIR "/emacs/settings.org")
-    			 (?e "emacs"                :concat    PRIVATE-DIR "emacs/.emacs")
-    			 (?c "completion"           :concat    quick-open-shell "common/completion.bash")
-    			 (?q "quick open settings"  :var       find-quick-files-src-block)))))
-
     (setq treesit-language-source-alist
     	  '((bash "https://github.com/tree-sitter/tree-sitter-bash")
     		(cmake "https://github.com/uyha/tree-sitter-cmake")
@@ -1669,6 +1663,7 @@
     		(typescript "https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src")
     		(yaml "https://github.com/ikatyang/tree-sitter-yaml")
     		(cpp "https://github.com/ikatyang/tree-sitter-cpp")
+    		(nix "https://github.com/nix-community/tree-sitter-nix")
     		(rust "https://github.com/tree-sitter/tree-sitter-rust")))
 
     (setq org-move-headings-alist
@@ -1764,43 +1759,34 @@
   )
   :END:
   #+BEGIN_SRC emacs-lisp
-    (mapc (lambda (package)
-    		(add-to-list 'package-archives package t))
-    	  '(("melpa" "https://melpa.org/packages/")
-    		("melpa-stable" "https://stable.melpa.org/packages/")
-    		;;("ox-odt" "https://kjambunathan.github.io/elpa/")
-    		;; For important compatibility libraries like cl-lib
-    		("gnu" "https://elpa.gnu.org/packages/")))
+    (package-initialize)
+
+    (add-to-list 'package-archives '("gnu" . "https://elpa.gnu.org/packages/") t)
+    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+    (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
+    (add-to-list 'package-archives '("ox-odt" . "https://kjambunathan.github.io/elpa/") t)
 
     ;; MELPA uses a versioning scheme based on dates, which means that packages from
     ;; that archive are always preferred if `:ensure' is present in the
     ;; `use-package' block. This guarantees that you are using a version of that
     ;; package that has been specifically marked for release by its developer, and
     ;; not a development snapshot.
-    (setq use-package-always-pin "nongnu")
+    ;;(setq use-package-always-pin "gnu")
+
+    (require 'use-package)
 
     (use-package all
       :ensure t)
-
-    (use-package all-the-icons
-      :ensure t
-      :defer t)
 
     (use-package bash-completion
       :ensure t
       :defer t)
 
     (use-package diff-hl
-      :defer t
-      :ensure t)
+      :ensure t
+      :defer t)
 
-    (use-package hide-lines
-      :ensure t)
-
-    (use-package haskell-ts-mode
-      :ensure t)
-
-    (use-package highligh-indent-buides
+    (use-package highlight-indent-guides
       :ensure t
       :defer t)
 
@@ -1831,10 +1817,6 @@
     (use-package swiper
       :ensure t)
 
-    (use-package therapy
-      :ensure t
-      :defer t)
-
     (use-package transpose-frame
       :ensure t
       :defer t)
@@ -1864,9 +1846,6 @@
     (use-package ivy
       :ensure t)
 
-    (use-package nlinum
-      :ensure t)
-
     (use-package paredit
       :ensure t)
 
@@ -1882,12 +1861,8 @@
       :ensure t
       :defer t)
 
-    (use-package minibuffer-mode
-      :ensure t
-      :bind (:map minibuffer-mode-map
-    			  ("S-<backspace>" . mine/backwards-delete-directory-name)))
-
-    (package-initialize)
+    (use-package xref
+      :ensure t)
   #+END_SRC
 * Modes
 ** org-mode
@@ -1915,7 +1890,7 @@
        (setq org-indent-indentation-per-level 1)
        (hide-lines-matching "# -\\*-.*")
        (org-indent-mode -1)
-       (turn-on-evil-mode 1))
+       (turn-on-evil-mode))
 
      (defun mine/writing-org-roam-file ()
        (auto-fill-mode 1)
@@ -1979,8 +1954,7 @@
        (interactive)
        (org-tree-to-indirect-buffer)
        (other-window 1)
-       (setq mode-line-format (remove 'mode-line-buffer-identification mode-line-format))
-       (nlinum-mode -1))
+       (setq mode-line-format (remove 'mode-line-buffer-identification mode-line-format)))
 
      (defun mine--org-move-heading-to-heading (target-heading-string target-level &optional region-start region-end no-move)
        "Moves the heading at point to the heading specified by
@@ -2165,11 +2139,6 @@
        :after org
        :defer t)
 
-     (use-package ox-odt
-       :ensure t
-       :after org
-       :defer t)
-
      (use-package ox-typst
        :ensure t
        :after org
@@ -2228,7 +2197,8 @@
        (org-roam-db-autosync-mode))
 
      (use-package org
-       :hook (org--hook)
+       :hook (org-mode . org--hook)
+       
        :custom
        (org-agenda-include-diary t)
        (org-agenda-start-on-weekday 1)
@@ -2330,7 +2300,23 @@
      			   ("C-c &"     . #'org-mark-ring-goto)
      			   ("C-c 8"		. (lambda () (interactive) (org-table-recalculate 'iterate))))
        :ensure t)
+   #+END_SRC
+** tree-sitter treesitter
+   #+BEGIN_SRC emacs-lisp
+     ;; Install all needed treesitter grammars
+     (defun mine/install-treesitter-grammar (language)
+       "Installs the LANGUAGE's grammar if it isn't installed already. LANGUAGE
+     must be a symbol."
+       (unless (treesit-language-available-p language)
+     	(message "Installing language %s" language)
+     	(treesit-install-language-grammar language)))
 
+     (mapc #'mine/install-treesitter-grammar
+     	  '(nix
+     		go
+     		c
+     		rust
+     		typescript))
    #+END_SRC
 ** fountain-mode
    #+BEGIN_SRC emacs-lisp
@@ -2340,8 +2326,7 @@
        (centred-cursor-mode 1)
        (flyspell-mode 1)
        (olivetti-80 90)
-       (customize-set-variable 'fountain-hide-emphasis-markup t)
-       (nlinum-mode -1))
+       (customize-set-variable 'fountain-hide-emphasis-markup t))
 
      (defun mine/fountain-next-character-dialog ()
        "When on a dialog line, do newline (two, actually), select the next character, and go to their dialog immediately, without needing to confirm."
@@ -2448,7 +2433,7 @@
      		'("MORNING" "DAWN" "EVENING" "NOON" "DUSK" "VARIOUS"))
        (advice-add #'fountain-upcase-line-and-newline :after 'fountain-upcase-colon-line--advice-after)
        
-       :hook (mine/fountain-mode-hooks)
+       :hook (fountain-mode . mine/fountain-mode-hooks)
        :ensure t
        :bind (:map fountain-mode-map
      			  ("C-`"		. #'cw-fountain-count)
@@ -2627,7 +2612,8 @@
 
      (use-package mermaid-ts-mode
        :ensure t
-       :hook (turn-on-evil-mode mermaid-hook-funcs)
+       :hook ((mermaid-ts-mode . turn-on-evil-mode)
+     		 (mermaid-ts-mode . mermaid-hook-funcs))
        :defer t)
    #+END_SRC
 ** nushell-mode nushell-ts-mode
@@ -2697,7 +2683,6 @@
      						:new-connection (lsp-stdio-connection "gopls")
      						:activation-fn (lsp-activate-on "go")
      						:server-id 'gopls))
-       (add-to-list 'lsp-language-id-configuration '(rust-ts-mode . "rust"))
        (lsp-register-client (make-lsp-client
      						:new-connection (lsp-stdio-connection "rust-analyzer")
      						:activation-fn (lsp-activate-on "rust")
@@ -2713,7 +2698,7 @@
      			  ("C-c C-r"	. #'lsp-workspace-restart--really)
      			  ("C-5"		. #'lsp-show-docs-with-cursor))
 
-       :hook (mine/lsp-hook)
+       :hook (lsp-mode . mine/lsp-hook)
        :defer t)
    #+END_SRC
 ** go-mode go-ts-mode
@@ -2722,7 +2707,6 @@
          (lsp-deferred)
          (yas-minor-mode 1)
          (vc-mode 1)
-         (nlinum-mode 1)
          (hs-minor-mode 1)
          (set-fill-column 80)
          (highlight-indent-guides-mode 1)
@@ -2896,25 +2880,12 @@
                      "/lib/metadata"
                      "/\\.licenses"))))
 
-     (use-package bazel
-       :defer t
-       :ensure t)
-
-     (use-package company-go
-       :defer t
-       :ensure t)
-
-     (use-package flymake-go
-       :ensure t
-       :after (flymake go-ts-mode)
-       :defer t)
-
      (use-package go-ts-mode
        :ensure t
-       :hook (go-mode-hooks-func
-              (before-save gofmt-before-save)
-              (before-save #'lsp-format-buffer t t)
-              (before-save #'lsp-organize-imports t t))
+       :config
+       (add-hook 'before-save-hook #'gofmt-before-save)
+       (add-hook 'before-save-hook #'lsp-format-buffer t t)
+       (add-hook 'before-save-hook #'lsp-organize-imports t t)
 
        :custom
        (go-ts-mode-indent-offset 4)
@@ -2922,7 +2893,6 @@
 
        :config
        (go-eldoc-setup)
-       (add-to-list 'lsp-language-id-configuration '(go-ts-mode . "go"))
        (add-to-list 'lsp-file-watch-ignored-files ".*bazel-.*")
        (add-to-list 'load-path "~/.emacs.d/bazel/")
        (mapcar (lambda (letter) (define-key go-ts-mode-map letter 'skeleton-pair-insert-maybe))
@@ -2955,8 +2925,7 @@
 ** text-mode
    #+BEGIN_SRC emacs-lisp
      (defun hook/text-mode ()
-       (nlinum-mode 1)
-       (turn-on-evil-mode 1)
+       (turn-on-evil-mode)
        (visual-line-mode 1))
 
      (add-hook 'text-mode-hook #'hook/text-mode)
@@ -2969,7 +2938,7 @@
 
      (use-package markdown-ts-mode
        :ensure t
-       :hook (hook/markdown-ts-mode)
+       :hook (markdown-ts-mode . hook/markdown-ts-mode)
        :defer t)
 
    #+END_SRC
@@ -2984,11 +2953,9 @@
    #+BEGIN_SRC emacs-lisp
      (use-package yasnippet
        :config
-       (yas-load-directory (format "%semacs/.emacs.d/snippets/yasnippet-yaml/" PRIVATE-DIR))
-       (yas-load-directory (format "%semacs/.emacs.d/elpa/k8s-mode-20250408.844/snippets/" PRIVATE-DIR))
-       (add-to-list 'yas-snippet-dirs "~/Private/emacs/snippets/" t)
+       (add-to-list 'yas-snippet-dirs "~/pc-config/emacs/snippets/" t)
        (yas-reload-all)
-       :hook (:map yas-keymap
+       :bind (:map yas-keymap
      			  ("C-<tab>" . 'indent-for-tab-command))
        :ensure t)
    #+END_SRC
@@ -3047,9 +3014,8 @@
                     (print-debug "5")
                     (setq lines-num-to-jump 1)))))))))
 
-     (use-package hideshow-org
-       :ensure t
-       :defer t)
+     (use-package hide-lines
+       )
 
      (use-package hideshow
        :custom
@@ -3154,7 +3120,6 @@
        (lsp-deferred)
        (yas-minor-mode 1)
        (vc-mode 1)
-       (nlinum-mode 1)
        (hs-minor-mode 1)
        (highlight-indent-guides-mode 1)
        (toggle-truncate-lines -1)
@@ -3166,16 +3131,45 @@
 
      (use-package rust-ts-mode
        :ensure t
-       :hook (rust--mode-hooks-func
-     		 (before-save #'lsp-format-buffer t t)
-     		 (before-save #'lsp-organize-imports t t))
+       :hook (rust-ts-mode . rust--mode-hooks-func)
+       :config
+       (add-hook before-save-hook #'lsp-format-buffer t t)
+       (add-hook before-save-hook #'lsp-organize-imports t t)
        :bind (:map rust-ts-mode-map
      			  ("C-3" . 'lsp-ui-doc-glance))
        :defer t)
    #+END_SRC
 ** evil-mode
    #+BEGIN_SRC emacs-lisp
-     (require 'evil)
+     (use-package evil-visual-mark-mode
+       :ensure t
+       :after evil)
+
+     (use-package evil
+       :init
+       (defvar evil-mode-buffers '()) ; Because of some bug that requires this var but doesn't init it.
+       
+       :custom
+       (evil-visual-state-cursor 'hollow)
+       (evil-insert-state-cursor "#ECBC42")
+       (evil-emacs-state-cursor '(hbar "green"))
+       (evil-normal-state-cursor '(box "#8cc4ff"))
+
+       :config
+       (advice-add 'evil-normal-state :before (lambda (&rest r) (setq evil-point-before (point))))
+       (advice-add 'evil-normal-state :after (lambda (&rest r) (unless (= (point) evil-point-before) (forward-char))))
+       (advice-add 'evil-goto-line :after 'hs--show-on-jump)
+       (advice-add 'evil-delete-backward-char-and-join :before #'skeleton-delete--advice)
+       (advice-add 'evil-delete-backward-char-and-join :before #'delete-space-lines)
+       (advice-add 'evil-delete-backward-char-and-join :after  #'safe-indent)
+
+       :bind (:map evil-motion-state-map
+     			  ("k" . 'previous-line)
+     			  ("l" . 'next-line)
+     			  ("j" . 'evil-backward-char)
+     			  ("'" . 'evil-forward-char)
+     			  ("h" . 'evil-goto-mark-line))
+       :ensure t)
 
      (evil-define-command evil-scroll-line-to-top (count)
        "Scrolls line number COUNT (or the cursor line) to the top of the window."
@@ -3289,35 +3283,7 @@
      (evil-define-key 'motion help-mode-map "\t" 'forward-button)
      (evil-define-key 'motion markdown-mode-map "\t" 'markdown-cycle)
      ;; So this is sometimes \t and sometimes <tab> and it isn't consistent
-     (evil-define-key 'motion fountain-mode-map "\t" 'fountain-dwim) 
-
-
-     (use-package evil-visual-mark-mode
-       :ensure t
-       :after evil)
-
-     (use-package evil
-       :custom
-       (evil-visual-state-cursor 'hollow)
-       (evil-insert-state-cursor "#ECBC42")
-       (evil-emacs-state-cursor '(hbar "green"))
-       (evil-normal-state-cursor '(box "#8cc4ff"))
-
-       :config
-       (advice-add 'evil-normal-state :before (lambda (&rest r) (setq evil-point-before (point))))
-       (advice-add 'evil-normal-state :after (lambda (&rest r) (unless (= (point) evil-point-before) (forward-char))))
-       (advice-add 'evil-goto-line :after 'hs--show-on-jump)
-       (advice-add 'evil-delete-backward-char-and-join :before #'skeleton-delete--advice)
-       (advice-add 'evil-delete-backward-char-and-join :before #'delete-space-lines)
-       (advice-add 'evil-delete-backward-char-and-join :after  #'safe-indent)
-
-       :bind (:map evil-motion-state-map
-     			  ("k" . 'previous-line)
-     			  ("l" . 'next-line)
-     			  ("j" . 'evil-backward-char)
-     			  ("'" . 'evil-forward-char)
-     			  ("h" . 'evil-goto-mark-line))
-       :ensure t)
+     (evil-define-key 'motion fountain-mode-map "\t" 'fountain-dwim)
    #+END_SRC
 ** nix-mode nix-ts-mode
    #+BEGIN_SRC emacs-lisp
@@ -3328,10 +3294,8 @@
      (use-package nix-ts-mode
        :ensure t
        :mode "\\.nix$"
-       :hook (mine/nix-hook)
+       :hook (nix-ts-mode . mine/nix-hook)
        :defer t)
-
-
    #+END_SRC
 ** flycheck-mode
    #+BEGIN_SRC emacs-lisp
@@ -3355,10 +3319,9 @@
        :custom (flycheck-check-syntax-automatically '(save mode-enabled))
        :bind (:map flycheck-mode-map
      			  ("C-4" . 'flycheck-list-errors-and-select)
-     			  ("C-4" . 'flycheck-list-errors-and-select)H)
+     			  ("C-4" . 'flycheck-list-errors-and-select))
        :ensure t
        :defer t)
-
    #+END_SRC
 ** protobuffer-mode protobuffer-ts-mode protobuf-ts-mode
    #+BEGIN_SRC emacs-lisp
@@ -3367,7 +3330,7 @@
 
      (use-package protobuf-ts-mode
        :ensure t
-       :hook (hook/protobuffer-ts-mode)
+       :hook (protobuf-ts-mode . hook/protobuffer-ts-mode)
        :custom
        (my-protobuf-style '((c-basic-offset . 4)
      					   (indent-tabs-mode . nil)))
@@ -3394,7 +3357,6 @@
        (load "dired-x"))
 
      (defun hook/dired-mode ()
-       (nlinum-mode 1)
        (dired-hide-details-mode 1))
 
      (add-hook 'dired-load-hook #'hook/dired-load)
@@ -3407,7 +3369,7 @@
 ** json-mode json-ts-mode
    #+BEGIN_SRC emacs-lisp
      (use-package json-ts-mode
-       :hook (hs-minor-mode)
+       :hook (json-ts-mode . hs-minor-mode)
        :bind (:map json-ts-mode-map
      			  ("M-." . 'end-of-buffer))
        :ensure t
@@ -3420,7 +3382,6 @@
    #+BEGIN_SRC emacs-lisp
      (add-hook 'emacs-lisp-mode-hook
      		  (lambda ()
-     			(nlinum-mode 1)
      			(define-key emacs-lisp-mode-map
      						"\r" 'reindent-then-newline-and-indent)
      			(define-key lisp-interaction-mode-map
@@ -3436,7 +3397,7 @@
 ** help-mode
    #+BEGIN_SRC emacs-lisp
      (defun hook/help-mode ()
-       (turn-on-evil-mode 1))
+       (turn-on-evil-mode))
 
      (add-hook 'help-mode-hook #'hook/help-mode)
    #+END_SRC
@@ -3590,10 +3551,12 @@
     (advice-add 'backward-delete-char :before 'delete-space-lines)
     (advice-add 'backward-delete-char :after 'safe-indent)
 
-    (load-file (concat PRIVATE-DIR "code/elisp/movie-mode/movie-mode.el"))
-    (load-file (expand-file-name (concat PRIVATE-DIR "code/elisp/story mode.el")))
-    (load-file (expand-file-name (concat PRIVATE-DIR "code/elisp/pronunciation.el")))
-    (load-file (expand-file-name "~/cease/emacs-lisp/cease-ts-mode.el"))
+    (mapc (lambda (elisp-file)
+    		(when (file-exists-p elisp-file)
+    		  (load-file elisp-file)))
+    	  (list (concat PRIVATE-DIR "code/elisp/story mode.el")
+    			(concat PRIVATE-DIR "code/elisp/pronunciation.el")
+    			"~/cease/emacs-lisp/cease-ts-mode.el"))
 
     (load-theme 'my-pastels t)
 
@@ -3607,10 +3570,7 @@
                                 (if (or (string= "image-mode" major-mode)
                                         (string= "doc-view-mode" major-mode))
                                     (evil-local-mode -1)
-                                  (turn-on-evil-mode 1))
-                                (when (< large-file-warning-threshold (point-max))
-                                  (nlinum-mode -1)
-                                  (nlinum-mode -1))))
+                                  (turn-on-evil-mode))))
   #+END_SRC
 * Exec
   #+BEGIN_SRC emacs-lisp
@@ -3708,6 +3668,5 @@
 # eval: (visual-line-mode -1)
 # eval: (toggle-truncate-lines)
 # insertion-string: "#+BEGIN_SRC emacs-lisp\n\n#+END_SRC"
-# eval: (nlinum-mode -1)
 # eval: (specific-string-insertion 1)
 # end:

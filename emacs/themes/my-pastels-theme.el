@@ -1,3 +1,5 @@
+;; -*- lexical-binding: t; -*-
+
 (deftheme my-pastels
   "Created 2025-11-12.")
 
