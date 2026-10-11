@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: loggerf
+# key: lf
+# contributor : @me
+# --
+$3logger.Infof("$1", $2)$0

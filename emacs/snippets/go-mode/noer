@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: require-noerror
+# key: noer
+# contributor : @me
+# --
+require.NoError(t, err, $1)$0

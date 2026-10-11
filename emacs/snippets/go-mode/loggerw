@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: logger
+# key: lw
+# contributor : @me
+# --
+$3logger.Infow("$1", $2)$0

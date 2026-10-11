@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: return-fmt-error
+# key: rf
+# contributor : @me
+# --
+return $3 fmt.Errorf("$1", $2 error)$4

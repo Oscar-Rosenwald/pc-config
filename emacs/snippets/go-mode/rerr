@@ -1,0 +1,8 @@
+# -*- mode: snippet -*-
+# name: return-error
+# key: rer
+# contributor : @me
+# --
+if err != nil {
+	return err
+}
