@@ -1709,6 +1709,8 @@
     			  cursor-type 'box
     			  org-adapt-indentation t)
 
+    (setopt treesit-font-lock-level 4)
+
     (put 'narrow-to-page 'disabled nil)
     (put 'narrow-to-region 'disabled nil)
     (put 'scroll-left 'disabled nil)
