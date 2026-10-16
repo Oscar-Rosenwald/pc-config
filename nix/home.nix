@@ -12,6 +12,7 @@
 # - pkgs: The result of [import nixpkgs {...}]
 
 {
+  config, # == self
   specialArgs,
   pkgs,
   ...
@@ -21,6 +22,7 @@ let
   # Path to my directory of configurations (in the nix store, because duh).
   configFiles = specialArgs.configFiles;
   configValues = specialArgs.configValues;
+  lib = pkgs.lib;
 in {
   home.username = "william";
   home.homeDirectory = "/home/william";
@@ -173,6 +175,105 @@ in {
 
   wayland.windowManager.sway = {
     enable = true;
-    # TODO: config = { ... }; See home-manager/modules/services/window-managers/i3-sway/sway.nix
+    config =
+      let
+        modifier = "Mod4";
+        terminal = "${pkgs.terminator}/bin/terminator";
+        fuzzel = "${pkgs.fuzzel}/bin/fuzzel";
+      in {
+        inherit modifier;
+        focus.followMouse = true;
+
+        keybindings =  lib.attrsets.mergeAttrsList [
+          # Workspace navigation
+          (lib.attrsets.mergeAttrsList
+            (map
+              (num: let ws = toString num; in {
+                "${modifier}+${ws}" = "workspace ${ws}";
+                "${modifier}+Shift+${ws}" = "move container to workspace ${ws}";
+              })
+              [ 1 2 3 4 5 6 7 8 9 ]
+            )
+          )
+
+          # Window navigation / movement
+          (lib.attrsets.concatMapAttrs
+            (direction: key: {
+              "${modifier}+${key}" = "focus ${direction}";
+              "${modifier}+Shift+${key}" = "move ${direction}";
+              "${modifier}+Ctrl+Shift+${key}" = "move workspace to output ${direction}";
+            })
+            {
+              up = "k";
+              down = "l";
+              left = "j";
+              right = "apostrophe";
+            }
+          )
+          # Using arrows
+          (lib.attrsets.mergeAttrsList
+            (map
+              (direction: {
+                "${modifier}+${direction}" = "focus ${direction}";
+                "${modifier}+Shift+${direction}" = "move ${direction}";
+                "${modifier}+Ctrl+Shift+${direction}" = "move workspace to output ${direction}";
+              })
+              [ "up" "down" "left" "right" ]
+            )
+          )
+
+          # Generic window manipulation
+          {
+            "${modifier}+Return" = "exec --no-startup-id foot";
+            "${modifier}+y" = "kill";
+            "${modifier}+f" = "fullscreen toggle";
+            "${modifier}+Alt+f" = "floating toggle";
+            "${modifier}+Shift+f" = "focus mode_toggle";
+            "${modifier}+s" = "sticky toggle";
+          }
+
+          # Window layout
+          {
+            "${modifier}+h" = "split h";
+            "${modifier}+v" = "split v";
+            "${modifier}+i" = "layout stacking";
+            "${modifier}+o" = "layout tabbed";
+            "${modifier}+p" = "layout toggle split";
+          }
+
+          # Scratchpad
+          {
+            "${modifier}+Shift+minus" = "move scratchpad";
+            "${modifier}+minus" = "scratchpad show";
+          }
+
+          # Sway session management
+          {
+            "${modifier}+Shift+c" = "reload";
+            "${modifier}+Shift+r" = "restart";
+            "${modifier}+semicolon" = "menu";
+            "${modifier}+Shift+e" = "swaymsg exit";
+            "${modifier}+n" = "exec ${fuzzel}";
+          }
+        
+          # Misc
+          {
+            "Print" = "exec --no-startup-id flameshot gui";
+          }
+        ];
+
+        # TODO:
+        # - mod+x
+        # - mod+z
+        # - mod+Shift+x
+        # - resizing
+        # - status bar setup
+        # - keyboard layouts (example):
+        #     input type:keyboard {
+        #       xkb_layout us,latam
+        #     }
+        #     bindsym $mod+0 input type:keyboard xkb_switch_layout next
+        # - window/border colours
+      };
   };
 }

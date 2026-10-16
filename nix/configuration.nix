@@ -61,8 +61,10 @@
     lsof
     emacs
     gnutls
-	gcc
-	rust-analyzer
-	gopls
+    gcc
+    rust-analyzer
+    gopls
+    ferdium # All-in-one messaging app
+    fuzzel
   ];
 }
