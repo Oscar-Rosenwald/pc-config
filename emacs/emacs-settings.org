@@ -576,6 +576,8 @@
 
   (defun find-file-and-line (filename)
     (interactive "sFile with line: ")
+    (require 'cl)
+    (require 'projectile)
     (setq filename (replace-regexp-in-string "//" "/" filename))
     (setq filename (string-clean-whitespace filename))
     (let* ((matched     (string-match-p ".*:[0-9]+" filename))
@@ -3821,6 +3823,7 @@ hooks, advice, global key bindings not tied to installed packages
 # Local variables:
 # insertion-string: "#+BEGIN_SRC emacs-lisp\n\n#+END_SRC"
 # org-adapt-indentation: nil
+# display-line-numbers-width: 4
 # eval: (visual-line-mode -1)
 # eval: (toggle-truncate-lines)
 # eval: (when (boundp 'specific-string-insertion) (specific-string-insertion 1))
