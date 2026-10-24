@@ -2345,13 +2345,14 @@ or just the function names if the hook name is the same as the package name + "h
   	(message "Installing language %s" language)
   	(treesit-install-language-grammar language)))
 
-  (mapc #'mine/install-treesitter-grammar
-  	  '(nix
-  		go
-  		c
-  		rust
-  		typescript))
-#+END_SRC
+     (mapc #'mine/install-treesitter-grammar
+     	  '(nix
+     		go
+     		c
+     		rust
+     		bash
+     		typescript))
+   #+END_SRC
 ** fountain-mode
 #+BEGIN_SRC emacs-lisp
   (defun fountain-insert-two-newlines () (interactive) (insert "\n\n"))
@@ -3008,10 +3009,11 @@ or just the function names if the hook name is the same as the package name + "h
     (when hs-minor-mode
       (hs-show-block)))
 
-  (defun hs--hide-on-method (func &optional end)
+  (defun hs--hide-on-method (func &rest end)
     (save-excursion
       (end-of-line)
-      (funcall func end)))
+      (if end (funcall func end)
+        (funcall func))))
 
   (defun hs-hide-leaves ()
     "Hide all blocks nested in the current one."
@@ -3039,7 +3041,7 @@ or just the function names if the hook name is the same as the package name + "h
                         (setq lines-num-to-jump 1))
 
                ;; Hide standard blocks
-               (if (hs-looking-at-block-start-p)
+               (if (hs-looking-at-block-start-p--default)
                    (progn
                      (hs-hide-block)
                      (forward-sexp)
@@ -3060,28 +3062,28 @@ or just the function names if the hook name is the same as the package name + "h
   (defun mine/nix-only-let-expression (start-point)
     (save-excursion
       (catch 'end
-      (when (re-search-backward "#" (max start-point (point-at-bol)) t)
+        (when (re-search-backward "#" (max start-point (point-at-bol)) t)
           (throw 'end nil))
-      
-      (let ((current-point (point))
+        
+        (let ((current-point (point))
               substring-start substring)
           
           (save-excursion
-          (setq substring-start (re-search-backward "/\\*" start-point t))
-          (when (not (null substring-start))
+            (setq substring-start (re-search-backward "/\\*" start-point t))
+            (when (not (null substring-start))
               (setq substring (buffer-substring-no-properties
                                substring-start
                                current-point))
               (unless (string-search "*/" substring)
-              (throw 'end nil))))
+                (throw 'end nil))))
 
           (save-excursion
-          (setq substring (buffer-substring-no-properties
-                           start-point
-                           current-point))
-          (unless (evenp (mine/count-substring "\"" substring))
+            (setq substring (buffer-substring-no-properties
+                             start-point
+                             current-point))
+            (unless (evenp (mine/count-substring "\"" substring))
               (throw 'end nil))
-          (unless (evenp (mine/count-substring "''" substring))
+            (unless (evenp (mine/count-substring "''" substring))
               (throw 'end nil)))
 
           (throw 'end t)))))
@@ -3107,7 +3109,7 @@ or just the function names if the hook name is the same as the package name + "h
     (interactive "P")
     (set-selective-display
      (or column
-       (unless selective-display
+         (unless selective-display
            (1+ (current-column))))))
 
   (defun toggle-hiding (column)
@@ -3119,51 +3121,8 @@ or just the function names if the hook name is the same as the package name + "h
             (hs-show-all))
       (toggle-selective-display column)))
 
-  (defun hs-hide-leaves ()
-    "Hide all blocks nested in the current one."
-    (interactive)
-    (save-excursion
-      (hs-show-block)
-      (hs-life-goes-on
-       (end-of-line)
-       (hs-find-block-beginning)
-       (print-debug "1")
-       (let ((block-end (save-excursion (funcall hs-forward-sexp-func)
-                                        (point)))
-             (lines-num-to-jump 1))
-         (while (< (pos-eol) block-end)
-           (next-line lines-num-to-jump)
-           (end-of-line)
-           (print-debug "2")
-           (unless (bolp)
-             (backward-char 1)
-             (print-debug "3")
-             (if (car-safe (hs-inside-comment-p))
-                 ;; Hide comments
-                 (progn (hs-hide-block)
-                        (print-debug "3.5")
-                        (setq lines-num-to-jump 1))
-
-               ;; Hide standard blocks
-               (if (hs-looking-at-block-start-p)
-                   (progn
-                     (hs-hide-block)
-                     (forward-sexp)
-                     (print-debug "4")
-
-                     ;; Hide more blocks on the same line (like if {...} else { ... )
-                     (unless (eolp)
-                       (forward-char)
-                       (print-debug "4.5"))
-                     (if (or (eolp)
-                             (= 1 (- (pos-eol) (point))))
-                         (setq lines-num-to-jump 1)
-                       (setq lines-num-to-jump 0)))
-                 (print-debug "5")
-                 (setq lines-num-to-jump 1)))))))))
-
   (use-package hide-lines
-    )
+    :ensure t)
 
   (use-package hideshow
     :custom
@@ -3519,11 +3478,13 @@ or just the function names if the hook name is the same as the package name + "h
 
   (use-package ace-jump-mode
     :defer t
-    :bind (("M-P" . ace-jump-mode)
-  		 ("M-p" . ace-window))
+    :bind (("M-P" . ace-jump-mode))
     :custom (ace-jump-mode-scope 'frame)
     :ensure t)
 
+  (use-package ace-window
+    :bind (("M-p" . ace-window))
+    :ensure t)
 #+END_SRC
 ** dired-mode
 #+BEGIN_SRC emacs-lisp
@@ -3609,78 +3570,78 @@ auto-complete ac-mode completion
 hooks, advice, global key bindings not tied to installed packages
 #+BEGIN_SRC emacs-lisp
   ;;; Turning on modes
-  (keymap-global-set "C-c C-S-c"		#'auto-complete-mode)
-  (keymap-global-set "C-c c"			#'centred-cursor-mode)
-  (keymap-global-set "C-c F"			#'flyspell-mode)
-  (keymap-global-set "C-c C-S-w"		#'wc-mode)
-  (keymap-global-set "C-c A"			#'evil-local-mode)
-  (keymap-global-set "C-x 7"			#'calendar)
-  (keymap-global-set "C-c V"			#'visual-line-mode)
-  (keymap-global-set "M-P"			#'ace-jump-mode)
+  (keymap-global-set "C-c C-S-c"      #'auto-complete-mode)
+  (keymap-global-set "C-c c"          #'centred-cursor-mode)
+  (keymap-global-set "C-c F"          #'flyspell-mode)
+  (keymap-global-set "C-c C-S-w"      #'wc-mode)
+  (keymap-global-set "C-c A"          #'evil-local-mode)
+  (keymap-global-set "C-x 7"          #'calendar)
+  (keymap-global-set "C-c V"          #'visual-line-mode)
+  (keymap-global-set "M-P"            #'ace-jump-mode)
 
   ;;; Global key bindings
-  (keymap-global-set "C-S-x C-S-f"	#'find-file-only-window)
-  (keymap-global-set "C-{"			#'rotate-frame-anticlockwise)
-  (keymap-global-set "C-}"			#'rotate-frame-clockwise)
-  (keymap-global-set "M-^"			#'flip-frame)
-  (keymap-global-set "M->"			#'flop-frame)
-  (keymap-global-set "C-S-c C-S-c"	#'mc/edit-lines)
-  (keymap-global-set "C-S-c c"		#'mc/mark-all-like-this)
-  (keymap-global-set "C-<"			#'mc/mark-previous-like-this)
-  (keymap-global-set "C->"			#'mc/mark-next-like-this)
-  (keymap-global-set "M-p"			#'ace-window)
-  (keymap-global-set "C-c l"			#'org-store-link)
-  (keymap-global-set "C-S-x C-f"		#'find-alternate-file-other-window)
-  (keymap-global-set "C-S-x M-f"		#'find-alternate-file)
-  (keymap-global-set "C-S-z"			#'suspend-frame)
-  (keymap-global-set "C-h M-f"		#'find-function)
-  (keymap-global-set "C-2"			#'er/expand-region)
-  (keymap-global-set "M-,"			#'beginning-of-buffer)
-  (keymap-global-set "M-."			#'end-of-buffer)
-  (keymap-global-set "M-<"			#'xref-pop-marker-stack)
-  (keymap-global-set "C-x C-b"		#'ibuffer)
-  (keymap-global-set "M-]"			#'other-window)
-  (keymap-global-set "C-x F"			#'find-name-dired)
-  (keymap-global-set "M-g l"			#'rgrep)
-  (keymap-global-set "C-c f"  		#'projectile-find-file)
-  (keymap-global-set "<backtab>"		#'indent-relative)
-  (keymap-global-set "S-<backspace>"	#'backward-delete-char-untabify)
-  (keymap-global-set "C-6"  			#'evil-switch-to-windows-last-buffer)
-  (keymap-global-set "C-^"  			#'switch-to-buffer)
-  (keymap-global-set "C-s"			#'swiper)
-  (keymap-global-set "C-x M-f"		#'quickly-open-file)
-  (keymap-global-set "C-3"  			#'mine/inc-font-size)
-  (keymap-global-set "C-1"  			#'mine/dec-font-size)
-  (keymap-global-set "M-+"  			#'mine/inc-font-size)
-  (keymap-global-set "C-c DEL"		#'backward-delete-last-char)
-  (keymap-global-set "M-D"			#'forward-kill-word-and-some)
-  (keymap-global-set "M-<backspace>"	#'backward-kill-word-and-some)
-  (keymap-global-set "C-c C-`"		#'cw-set-origin)
-  (keymap-global-set "C-`"			#'cw-count)
-  (keymap-global-set "C-~"			#'cw-special-count)
-  (keymap-global-set "M-E"			#'forward-sentence-double-space)
-  (keymap-global-set "C-x M-k"		#'kill-forward-paragraph)
-  (keymap-global-set "C-S-x DEL"		#'backward-kill-paragraph)
-  (keymap-global-set "M-e"			#'forward-sentence)
-  (keymap-global-set "M-a"			#'backward-sentence)
-  (keymap-global-set "M-C"			#'capitalize-prev-word)
-  (keymap-global-set "M-L"			#'downcase-prev-word)
-  (keymap-global-set "M-U"			#'upcase-prev-word)
-  (keymap-global-set "M-F"			#'forward-word-beginning)
-  (keymap-global-set "M-B"			#'backward-word-end)
-  (keymap-global-set "C-<up>"			#'copy-from-above-command)
-  (keymap-global-set "C-0"			#'open-line-at-end-of-line)
-  (keymap-global-set "C-S-o"			#'open-line-and-indent)
-  (keymap-global-set "M-S-k"			#'kill-other-buffers-and-windows)
-  (keymap-global-set "C-x M-o"		#'kill-other-buffer-and-window)
-  (keymap-global-set "C-c a"			#'org-agenda)
-  (keymap-global-set "C-c M-c"		#'change-input-method-to-czech)
-  (keymap-global-set "M-Q"			#'unfill-paragraph)
-  (keymap-global-set "C-x 4 2"		#'clone-indirect-buffer-other-window-new-name)
-  (keymap-global-set "C-x 4 C"		#'clone-indirect-buffer-below)
-  (keymap-global-set "C-x 4 B"		#'switch-to-buffer-below)
-  (keymap-global-set "C-x 4 F"		#'find-file-below)
-  (keymap-global-set "M-A"			#'backward-sentence-double-space)
+  (keymap-global-set "C-S-x C-S-f"    #'find-file-only-window)
+  (keymap-global-set "C-{"            #'rotate-frame-anticlockwise)
+  (keymap-global-set "C-}"            #'rotate-frame-clockwise)
+  (keymap-global-set "M-^"            #'flip-frame)
+  (keymap-global-set "M->"            #'flop-frame)
+  (keymap-global-set "C-S-c C-S-c"    #'mc/edit-lines)
+  (keymap-global-set "C-S-c c"        #'mc/mark-all-like-this)
+  (keymap-global-set "C-<"            #'mc/mark-previous-like-this)
+  (keymap-global-set "C->"            #'mc/mark-next-like-this)
+  (keymap-global-set "M-p"            #'ace-window)
+  (keymap-global-set "C-c l"          #'org-store-link)
+  (keymap-global-set "C-S-x C-f"      #'find-alternate-file-other-window)
+  (keymap-global-set "C-S-x M-f"      #'find-alternate-file)
+  (keymap-global-set "C-S-z"          #'suspend-frame)
+  (keymap-global-set "C-h M-f"        #'find-function)
+  (keymap-global-set "C-2"            #'er/expand-region)
+  (keymap-global-set "M-,"            #'beginning-of-buffer)
+  (keymap-global-set "M-."            #'end-of-buffer)
+  (keymap-global-set "M-<"            #'xref-pop-marker-stack)
+  (keymap-global-set "C-x C-b"        #'ibuffer)
+  (keymap-global-set "M-]"            #'other-window)
+  (keymap-global-set "C-x F"          #'find-name-dired)
+  (keymap-global-set "M-g l"          #'rgrep)
+  (keymap-global-set "C-c f"          #'projectile-find-file)
+  (keymap-global-set "<backtab>"      #'indent-relative)
+  (keymap-global-set "S-<backspace>"  #'backward-delete-char-untabify)
+  (keymap-global-set "C-6"            #'evil-switch-to-windows-last-buffer)
+  (keymap-global-set "C-^"            #'switch-to-buffer)
+  (keymap-global-set "C-s"            #'swiper)
+  (keymap-global-set "C-x M-f"        #'quickly-open-file)
+  (keymap-global-set "C-3"            #'mine/inc-font-size)
+  (keymap-global-set "C-1"            #'mine/dec-font-size)
+  (keymap-global-set "M-+"            #'mine/inc-font-size)
+  (keymap-global-set "C-c DEL"        #'backward-delete-last-char)
+  (keymap-global-set "M-D"            #'forward-kill-word-and-some)
+  (keymap-global-set "M-<backspace>"  #'backward-kill-word-and-some)
+  (keymap-global-set "C-c C-`"        #'cw-set-origin)
+  (keymap-global-set "C-`"            #'cw-count)
+  (keymap-global-set "C-~"            #'cw-special-count)
+  (keymap-global-set "M-E"            #'forward-sentence-double-space)
+  (keymap-global-set "C-x M-k"        #'kill-forward-paragraph)
+  (keymap-global-set "C-S-x DEL"      #'backward-kill-paragraph)
+  (keymap-global-set "M-e"            #'forward-sentence)
+  (keymap-global-set "M-a"            #'backward-sentence)
+  (keymap-global-set "M-C"            #'capitalize-prev-word)
+  (keymap-global-set "M-L"            #'downcase-prev-word)
+  (keymap-global-set "M-U"            #'upcase-prev-word)
+  (keymap-global-set "M-F"            #'forward-word-beginning)
+  (keymap-global-set "M-B"            #'backward-word-end)
+  (keymap-global-set "C-<up>"         #'copy-from-above-command)
+  (keymap-global-set "C-0"            #'open-line-at-end-of-line)
+  (keymap-global-set "C-S-o"          #'open-line-and-indent)
+  (keymap-global-set "M-S-k"          #'kill-other-buffers-and-windows)
+  (keymap-global-set "C-x M-o"        #'kill-other-buffer-and-window)
+  (keymap-global-set "C-c a"          #'org-agenda)
+  (keymap-global-set "C-c M-c"        #'change-input-method-to-czech)
+  (keymap-global-set "M-Q"            #'unfill-paragraph)
+  (keymap-global-set "C-x 4 2"        #'clone-indirect-buffer-other-window-new-name)
+  (keymap-global-set "C-x 4 C"        #'clone-indirect-buffer-below)
+  (keymap-global-set "C-x 4 B"        #'switch-to-buffer-below)
+  (keymap-global-set "C-x 4 F"        #'find-file-below)
+  (keymap-global-set "M-A"            #'backward-sentence-double-space)
   (keymap-global-set "C-<down>"       (lambda () (interactive) (copy-from-bellow-command 1)))
   (keymap-global-set "C-<right>"      (lambda () (interactive) (copy-from-above-command 1)))
   (keymap-global-set "C-<left>"       (lambda () (interactive) (copy-from-above-command -1)))
@@ -3692,13 +3653,13 @@ hooks, advice, global key bindings not tied to installed packages
 
   (defadvice self-insert-command (before count-words activate)
     (when (and cw-origin
-  			 (not (= (point) (point-max))))
-  	(let (lis)
-  	  (dolist (place cw-origin)
-  		(if (<= (point) place)
-  			(push (1+ place) lis)
-  		  (push place lis)))
-  	  (setq cw-origin (reverse lis)))))
+               (not (= (point) (point-max))))
+      (let (lis)
+        (dolist (place cw-origin)
+          (if (<= (point) place)
+              (push (1+ place) lis)
+            (push place lis)))
+        (setq cw-origin (reverse lis)))))
 
   (advice-add 'ispell-add-per-file-word-list :before
               (lambda (word)
@@ -3745,11 +3706,11 @@ hooks, advice, global key bindings not tied to installed packages
   (advice-add 'backward-delete-char :after 'safe-indent)
 
   (mapc (lambda (elisp-file)
-  		(when (file-exists-p elisp-file)
-  		  (load-file elisp-file)))
-  	  (list (concat PRIVATE-DIR "code/elisp/story mode.el")
-  			(concat PRIVATE-DIR "code/elisp/pronunciation.el")
-  			"~/cease/emacs-lisp/cease-ts-mode.el"))
+          (when (file-exists-p elisp-file)
+            (load-file elisp-file)))
+        (list (concat PRIVATE-DIR "code/elisp/story mode.el")
+              (concat PRIVATE-DIR "code/elisp/pronunciation.el")
+              "~/cease/emacs-lisp/cease-ts-mode.el"))
 
   (load-theme 'my-pastels t)
 
