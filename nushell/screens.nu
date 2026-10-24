@@ -12,7 +12,7 @@ export def xrandr [--machine (-m)] {
   | default NULL offset_height
   | insert position { |row| parse position $row }
   | insert current_resolution { |row| parse resolution $row }
-  | insert enabled { |row| $row.current_resolution != 'N/A' }
+  | insert enabled { |row| $row.current_resolution != $env.config.table.missing_value_symbol }
   | update resolution_modes { |row| to resolution $row }
 
   if $machine {
