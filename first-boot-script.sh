@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#! nix-shell -i nu --pure
+#! nix-shell -i nu
 #! nix-shell -p nushell vim git jujutsu lolcat
 
 if ('/etc/nixos-original' | path exists) {
@@ -14,11 +14,12 @@ def log [line: string] {
 
 let me = whoami
 let configRepoPath = $"/home/($me)/pc-config"
-let thisPcName = input "What does your nix hardware config call this computer?"
+let thisPcName = input "What does your nix hardware config call this computer? "
+let newHostname = input "What will be the hostname of this computer? "
 
 log "Adding certificates to git"
 # This is needed because git sometimes just panics for no reason.
-git config --global http.sslCAInfo /etc/ssl/certs/cacertificates.crt
+git config --global http.sslCAInfo /etc/ssl/certs/ca-certificates.crt
 
 if ($configRepoPath | path exists) {
   log $"Removing old ($configRepoPath)" # In case we need to run the script again.
@@ -34,7 +35,8 @@ sudo mv /etc/nixos /etc/nixos-original
 
 log "Ensuring your custom configuration knows what computer this is"
 open $"($configRepoPath)/nix/flake.nix"
-  | str replace -r 'hostRename = self.hardware.* //' $"hostRename = self.hardware.($thisPcName) //"
+  | str replace -r 'newHost = self.hardware.* //' $"newHost = self.hardware.($thisPcName) //"
+  | str replace -r 'hostnameOverride = "intentionally-blank";' $"hostnameOverride = \"($newHostname)\";"
   | save --force $"($configRepoPath)/nix/flake.nix"
 
 log "Copying this machine's hardware configuration file to your custom configs"
@@ -49,4 +51,4 @@ cp ~/pc-config/emacs/.emacs ~/.emacs
 log "Stand by. Your OS is in the oven..."
 sudo nixos-rebuild --flake /etc/nixos switch
 
-"Done. Yay!" | lolcat
+"Done. Yay!" | lolcat -a -d 50

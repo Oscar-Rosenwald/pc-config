@@ -35,6 +35,7 @@ alias "jj copy" = jj duplicate
 alias "j clone" = jj duplicate
 def jgp [...rest] { ^jj git push -b ...$rest }
 def jgf [...rest] { ^jj git fetch -b ...$rest }
+def jdm [...rest] { ^jj describe -m ...$rest }
 alias jp = jgp
 alias jf = jgf
 

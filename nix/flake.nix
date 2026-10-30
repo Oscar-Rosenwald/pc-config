@@ -107,7 +107,7 @@
         # The qemu virtual machine on the work laptop.
         workQemuVm = {
           hostname = "work-qemu-william";
-          hardwareConfiguration = ./work-qemu-hardware-configuration.nix;
+          hardwareConfiguration = ./workQemuVm-hardware-configuration.nix;
           bootloaderDevice = "/dev/sda";
           supportEfi = false;
         };
@@ -117,9 +117,15 @@
         # Feel free to change [hostname] (the current one) and [hostnameOverride]
         # (the target hostname) to do this. No machine will (or can) use this
         # config long-term.
-        hostRename = self.hardware.qemuVm // {
+        hostRename = self.hardware.workQemuVm // {
+          hostname = "bad";
+          hostnameOverride = "work-qemu-william";
+        };
+
+        # For new installations. Never touch this :).
+        newHost = self.hardware.workQemuVm // {
           hostname = "nixos";
-          hostnameOverride = "qemu-william";
+          hostnameOverride = "intentionally-blank";
         };
       };
 
